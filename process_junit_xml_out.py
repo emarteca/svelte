@@ -35,7 +35,6 @@ output_file = sys.argv[1]
 # now, do the actual processing
 junit_tests = parse_xml_file("test-results.xml")
 relevant_descs = parse_relevant_descs_file("affected_test_descs.txt")
-all_descs = "|".join(relevant_descs.test_desc)
-junit_tests["relevant"] = junit_tests.test_id.str.contains(all_descs)
+junit_tests["relevant"] = junit_tests.test_id.isin(relevant_descs.test_desc)
 junit_tests = junit_tests[junit_tests.relevant].drop(["relevant"], axis=1)
 append_DF_to_file( junit_tests, output_file)
