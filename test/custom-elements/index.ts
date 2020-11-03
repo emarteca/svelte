@@ -1,77 +1,131 @@
-const perf_hooks = require('perf_hooks'); 
+const perf_hooks = requir
+('perf_hooks'); 
+
+
 
 import * as fs from 'fs';
 
+
+
 import * as path from 'path';
+
+
 
 import * as http from 'http';
 
+
 import { rollup } from 'rollup';
+
 
 import virtual from '@rollup/plugin-virtual';
 
 import puppeteer from 'puppeteer';
 
-import { addLineNumbers, loadConfig, loadSvelte } from '../helpers';
+imp
+ort { addLineNumbers, loadConfig, loadSvelte } from '../helpers';
+
 
 import { deepEqual } from 'assert';
 
 
-const page = `
+
+c
+onst page = `
 <body>
-	<main></main>
-	<script src='/bundle.js'></script>
-</body>
-`;
+	
+<main></mai
+>
+	
+<script src
+'/bundle.js'></script>
+<
+/body>
+`
+;
 
 
-const assert = fs.readFileSync(`${__dirname}/assert.js`, 'utf-8');
+co
+nst assert = fs.readFileSync(`${__dirna
+me}/assert.js`, 'utf-8');
 
 
-describe('custom-elements', function() 
+descr
+ibe('custom-el
+ments', function() 
 {
 	
-this.timeout(10000);
+this
+.timeout(10000);
 
 	
-let svelte;
+let s
+v
+lte;
 	
-let server;
+let
+ server;
 	
-let browser;
+let
+ browser;
 	
-let code;
+let c
+o
+e;
 
 	
 function create_server() 
 {
+
 		
-return new Promise((fulfil, reject) => 
+
+re
+turn new Promise((fulfil, reject) => 
+{
+		
+	
+co
+nst server = http.createServer((req,
+ res) => 
 {
 			
-const server = http.createServer((req, res) => 
-{
-				
+	
 if (req.url === '/') 
 {
-					
-res.end(page);
-				}
 
-				
-if (req.url === '/bundle.js') 
+		
+			
+re
+s.end(page);
+			
+	
+
+
+	
+			
+if
+ (req.url === '/bund
+le.js')
+
+
 {
-					
-res.end(code);
-				}
-			})
+		
+			
+re
+s.end(code);
+		
+		}
+		
+	})
 ;
 
-			
-server.on('error', reject);
+		
+	
+ser
+ver.on('error', reject);
 
 			
-server.listen('6789', () => 
+ser
+ver.listen('6789', () => 
 {
 				
 fulfil(server);
@@ -82,12 +136,15 @@ fulfil(server);
 	}
 
 	
-before(async () => 
+before(as
+
+ync () => 
 {
 		
 svelte = loadSvelte();
 		
-console.log('[custom-element] Loaded Svelte');
+console.
+log('[custom-element] Loaded Svelte');
 		
 server = await create_server();
 		
@@ -96,27 +153,34 @@ var TEMP_VAR_AUTOGEN19__RANDOM =  puppeteer.launch();
 console.log('[custom-element] Started server');
 		
 
-var TEMP_VAR_AUTOGEN19__RANDOM_LATER =  TEMP_VAR_AUTOGEN19__RANDOM
+var TEMP
+_VAR_AUTOGEN19__RANDOM_LATER =  TEMP_VAR_AUTOGEN19__RANDOM
 
 
 		
 console.log('[custom-element] Launched puppeteer browser');
 var TIMING_TEMP_VAR_AUTOGEN19__RANDOM_LATER = perf_hooks.performance.now();
  console.log("/home/ellen/Documents/ASJProj/TESTING_reordering/svelte/test/custom-elements/index.ts& [51, 2; 51, 37]& TEMP_VAR_AUTOGEN19__RANDOM& " + (perf_hooks.performance.now() - TIMING_TEMP_VAR_AUTOGEN19__RANDOM_LATER));
- browser =  await TEMP_VAR_AUTOGEN19__RANDOM_LATER
+ browse
+r =  await TEMP_VAR_AUTOGEN19__RANDOM_LATER
 
 	})
+
 ;
 
 	
 after(async () => 
 {
 		
-if (server) 
+if (s
+e
+ver) 
 server.close();
 		
-if (browser) 
-await browser.close();
+if (
+browser) 
+awai
+t browser.close();
 	})
 ;
 
@@ -124,11 +188,17 @@ await browser.close();
 fs.readdirSync(`${__dirname}/samples`).forEach(dir => 
 {
 		
-if (dir[0] === '.') 
-return;
+if (d
+
+ir[0] === '.
+') 
+retu
+rn;
 
 		
-const solo = /\.solo$/.test(dir);
+cons
+t solo = /\.solo$/.test
+(dir);
 		
 const skip = /\.skip$/.test(dir);
 		
@@ -136,10 +206,14 @@ const internal = path.resolve('internal/index.mjs');
 		
 const index = path.resolve('index.mjs');
 		
-const warnings = [];
+const 
+
+warnings = [];
 
 		
-(solo ? it.only : skip ? it.skip : it)(dir, async () => 
+(so
+l
+ ? it.only : skip ? it.skip : it)(dir, async () => 
 {
 			
 const config = loadConfig(`${__dirname}/samples/${dir}/_config.js`);

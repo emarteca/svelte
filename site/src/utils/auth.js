@@ -1,18 +1,29 @@
+const perf_hooks = require('perf_hooks'); 
+
 import * as cookie from 'cookie';
+
 import flru from 'flru';
+
 import { find, query } from './db';
 
-export const sanitize_user = obj => obj && ({
+
+export 
+const sanitize_user = obj => obj && ({
 	uid: obj.uid,
 	username: obj.username,
 	name: obj.name,
 	avatar: obj.avatar
 });
 
+
 const session_cache = flru(1000);
 
-export const create_user = async (gh_user, access_token) => {
-	return await find(`
+
+export 
+const create_user = async (gh_user, access_token) => 
+{
+	
+return await find(`
 		insert into users(uid, name, username, avatar, github_token)
 		values ($1, $2, $3, $4, $5) on conflict (uid) do update
 		set (name, username, avatar, github_token, updated_at) = ($2, $3, $4, $5, now())
@@ -20,28 +31,53 @@ export const create_user = async (gh_user, access_token) => {
 	`, [gh_user.id, gh_user.name, gh_user.login, gh_user.avatar_url, access_token]);
 };
 
-export const create_session = async user => {
-	const session = await find(`
+
+
+export 
+const create_session = async user => 
+{
+	
+const session = await find(`
 		insert into sessions(user_id)
 		values ($1)
 		returning uid
 	`, [user.id]);
 
-	session_cache.set(session.uid, user);
+	
+session_cache.set(session.uid, user);
 
-	return session;
+	
+return session;
 };
 
-export const delete_session = async sid => {
-	await query(`delete from sessions where uid = $1`, [sid]);
-	session_cache.set(sid, null);
+
+
+export 
+const delete_session = async sid => 
+{
+	
+
+var TIMING_TEMP_VAR_AUTOGEN17__RANDOM = perf_hooks.performance.now();
+ await  query(`delete from sessions where uid = $1`, [sid]);
+console.log("/home/ellen/Documents/ASJProj/TESTING_reordering/svelte/site/src/utils/auth.js& [35, 1; 35, 59]& TEMP_VAR_AUTOGEN17__RANDOM& " + (perf_hooks.performance.now() - TIMING_TEMP_VAR_AUTOGEN17__RANDOM));
+ 
+	
+session_cache.set(sid, null);
 };
 
-const get_user = async sid => {
-	if (!sid) return null;
 
-	if (!session_cache.has(sid)) {
-		session_cache.set(sid, await find(`
+
+const get_user = async sid => 
+{
+	
+if (!sid) 
+return null;
+
+	
+if (!session_cache.has(sid)) 
+{
+		
+session_cache.set(sid, await find(`
 			select users.id, users.uid, users.username, users.name, users.avatar
 			from sessions
 			left join users on sessions.user_id = users.id
@@ -49,17 +85,29 @@ const get_user = async sid => {
 		`, [sid]));
 	}
 
-	return session_cache.get(sid);
+	
+return session_cache.get(sid);
 };
 
-export const authenticate = () => {
+
+
+export 
+const authenticate = () => 
+{
 	// this is a convenient time to clear out expired sessions
-	query(`delete from sessions where expiry < now()`);
+	
+query(`delete from sessions where expiry < now()`);
 
-	return async (req, res, next) => {
-		req.cookies = cookie.parse(req.headers.cookie || '');
-		req.user = await get_user(req.cookies.sid);
+	
+return async (req, res, next) => 
+{
+		
+req.cookies = cookie.parse(req.headers.cookie || '');
+		
+req.user = await get_user(req.cookies.sid);
 
-		next();
+		
+next();
 	};
+
 };
